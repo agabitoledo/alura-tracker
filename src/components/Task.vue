@@ -18,7 +18,6 @@ import ITask from 'src/interfaces/ITask'
 import Box from './Box.vue'
 
 export default defineComponent({
-    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Task',
     components: {
         StopWatch,

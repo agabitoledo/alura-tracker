@@ -20,7 +20,6 @@ import { defineComponent } from 'vue';
 import StopWatch from './StopWatch.vue';
 
 export default defineComponent({
-    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Timer',
     emits: ['aoTemporizadorFinalizado'],
     components: {
