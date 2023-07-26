@@ -1,8 +1,5 @@
 <template>
     <section class="projetos">
-        <h1>
-            Projects
-        </h1>
         <form @submit.prevent="save">
             <div class="field">
                 <label for="projectName" class="label">Nome do Projeto</label>
@@ -19,6 +16,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useStore } from '../../store/index'
+import { CHANGE_PROJECT, ADDED_PROJECT  } from '../../store/type-mutations';
+import { NotifyType } from '@/interfaces/INotifications';
+import { notifyMixin } from '@/mixins/notify'
 
 export default defineComponent({
     name: 'FormAddProj',
@@ -32,6 +32,7 @@ export default defineComponent({
             type: String
         }
     },
+    mixins: [notifyMixin],
     mounted() {
         if (this.id) {
             console.log('this.id', this.id)
@@ -42,17 +43,18 @@ export default defineComponent({
     methods: {
         save() {
             if (this.id) {
-                this.store.commit('CHANGE_PROJECT', {
+                this.store.commit(CHANGE_PROJECT, {
                     id: this.id,
                     name: this.projectName
                 })     
                 //edit           
             } else {
-                this.store.commit('ADDED_PROJECT', this.projectName)
+                this.store.commit(ADDED_PROJECT, this.projectName)
             }
             this.projectName = ''
+            this.notify(NotifyType.SUCCESS, 'Excelente', 'O projeto foi cadastrado')
             this.$router.push('/projetos')
-        }
+        },
     },
     setup() {
         const store = useStore()
