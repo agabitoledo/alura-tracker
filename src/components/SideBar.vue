@@ -17,7 +17,7 @@
                 </li>
                 <br>
                 <li>
-                    <router-link to="/projetos" class="link">
+                    <router-link to="/projects" class="link">
                         <i class="fas fa-project-diagram">
                             Projetos
                         </i>

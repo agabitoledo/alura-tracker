@@ -16,10 +16,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useStore } from '../../store/index'
-import { CHANGE_PROJECT, ADDED_PROJECT  } from '../../store/type-mutations';
+import { REGISTER_PROJECT, CHANGE_PROJECT } from '../../store/type-actions';
 import { NotifyType } from '@/interfaces/INotifications';
-import { notifyMixin } from '@/mixins/notify'
-
+import useNotifier from '../../hooks/notifier'
 export default defineComponent({
     name: 'FormAddProj',
     data() {
@@ -32,10 +31,8 @@ export default defineComponent({
             type: String
         }
     },
-    mixins: [notifyMixin],
     mounted() {
         if (this.id) {
-            console.log('this.id', this.id)
             const project = this.store.state.projects.find(proj => proj.id == this.id)
             this.projectName = project?.name || ''
         }
@@ -43,23 +40,32 @@ export default defineComponent({
     methods: {
         save() {
             if (this.id) {
-                this.store.commit(CHANGE_PROJECT, {
+                this.store.dispatch(CHANGE_PROJECT, {
                     id: this.id,
                     name: this.projectName
-                })     
-                //edit           
+                }).then(() => this.wasSuccess()).catch(() => {
+                    this.notify(NotifyType.FAIL, 'Vixeeee!', 'Ocorreu uma falha na requisição')
+                })
             } else {
-                this.store.commit(ADDED_PROJECT, this.projectName)
+                this.store.dispatch(REGISTER_PROJECT, this.projectName)
+                    .then(() => this.wasSuccess())
+                    .catch(() => {
+                        this.notify(NotifyType.FAIL, 'Que pena :(', 'Ocorreu uma falha na requisição')
+                    });
             }
-            this.projectName = ''
-            this.notify(NotifyType.SUCCESS, 'Excelente', 'O projeto foi cadastrado')
-            this.$router.push('/projetos')
         },
+        wasSuccess() {
+            this.projectName = ''
+            this.notify(NotifyType.SUCCESS, 'Excelente', 'O projeto foi cadastrado com sucesso')
+            this.$router.push('/projects')
+        }
     },
     setup() {
         const store = useStore()
+        const { notify } = useNotifier()
         return {
             store,
+            notify
         }
     }
 })

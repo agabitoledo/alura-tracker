@@ -1,6 +1,6 @@
 <template>
     <section>
-        <router-link to="/projetos/new" class="button">
+        <router-link to="/projects/new" class="button">
             <span class="icon is-small">
                 <i class="fas fa-plus"></i>
             </span>
@@ -19,7 +19,7 @@
                     <td>{{ project.id }}</td>
                     <td>{{ project.name }}</td>
                     <td>
-                        <router-link :to="`/projetos/${project.id}`" class="button">
+                        <router-link :to="`/projects/${project.id}`" class="button">
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
                             </span>
@@ -38,20 +38,33 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { useStore } from '../../store/index'
-import { DELETE_PROJECT } from '../../store/type-mutations';
+import useNotifier from '../../hooks/notifier'
+import { NotifyType } from '@/interfaces/INotifications';
+import { GET_PROJECTS, DELETE_PROJECT } from '@/store/type-actions';
 
 export default defineComponent({
     name: 'Lista',
-    methods: { 
-        handleDelete (id: string) {
-            this.store.commit(DELETE_PROJECT, id)
+    methods: {
+        handleDelete(id: string) {
+            this.store.dispatch(DELETE_PROJECT, id)
+                .then(() => {
+                    this.notify(NotifyType.WARNING, 'EXCLUÍDO', 'Exclusão feita com sucesso');
+                })
+                .catch(() => {
+                    this.notify(NotifyType.FAIL, 'Deu ruim', 'Ocorreu falha na exclusão')
+                });
         }
+
     },
     setup() {
         const store = useStore()
+        store.dispatch(GET_PROJECTS)
+        const { notify } = useNotifier()
+
         return {
             listProjects: computed(() => store.state.projects),
-            store
+            store,
+            notify
         }
     }
 })

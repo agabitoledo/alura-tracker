@@ -1,0 +1,19 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "name": "Alura Tracker 3.0"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 2,
+      "timeInSeconds": 120,
+      "description": "Configuração teste",
+      "project": {
+        "id": 1,
+        "name": "sdsdsd"
+      }
+    }
+  ]
+}
