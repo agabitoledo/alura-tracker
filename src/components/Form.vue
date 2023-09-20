@@ -57,7 +57,7 @@ export default defineComponent({
     }
 })
 </script>
-<style>
+<style scoped>
 .form {
     color: var(--text-primary);
     background-color: var(--bg-primary);

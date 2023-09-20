@@ -60,23 +60,25 @@ export const store = createStore<Estado>({
         [CHANGE_PROJECT](context, project: IProject) {
             return clienteHttp.put(`/projects/${project.id}`, project)
         },
-        [DELETE_PROJECT]({commit}, id: string) {
+        [DELETE_PROJECT]({ commit }, id: string) {
             return clienteHttp.delete(`/projects/${id}`)
-            // para reduzir a requisição eu excluo direto no estado pelo mutation
-            .then(() => commit(DELETE_PROJECT, id))
+                // para reduzir a requisição eu excluo direto no estado pelo mutation
+                .then(() => commit(DELETE_PROJECT, id))
         },
-        // [GET_TASKS]({ commit }) {
-        //     clienteHttp.get('tasks').then(resp => commit(DEFINE_TASKS, resp.data))
-        // }
-        async [GET_TASKS]({ commit }) {
-            try {
-                const resp = await clienteHttp.get('tasks');
-                commit(DEFINE_TASKS, resp.data);
-            } catch (error) {
-                console.error("Erro ao buscar tarefas:", error);
-            }
+        [GET_TASKS]({ commit }) {
+            clienteHttp.get('tasks')
+                .then(resp => commit(DEFINE_TASKS, resp.data))
         }
-        
+        // async [GET_TASKS]({ commit }) {
+        //     try {
+        //         const resp = await clienteHttp.get('tasks');
+        //         console.log('resp', resp)
+        //         commit(DEFINE_TASKS, resp.data);
+        //     } catch (error) {
+        //         console.error("Erro ao buscar tarefas:", error);
+        //     }
+        // }
+
     }
 })
 
